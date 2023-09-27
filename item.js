@@ -75,11 +75,34 @@ app.get('/api/items/:id', async (req, res) => {
                     amount: item.price,
                     decimals: 2, // Puedes ajustar esto según tus necesidades
                 },
+                category_id: item.category_id,
                 picture: item.pictures[0].url,
                 condition: item.condition,
                 free_shipping: item.shipping.free_shipping,
                 sold_quantity: item.sold_quantity,
                 description,
+            },
+        };
+
+        res.json(responseData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener la información del item' });
+    }
+});
+
+app.get('/api/category/:id', async (req, res) => {
+    const itemId = req.params.id;
+    try {
+        const itemResponse = await axios.get(`https://api.mercadolibre.com/categories/${itemId}`);
+
+        const item = itemResponse.data;
+
+        const responseData = {
+            author,
+            item: {
+                id: item.id,
+                name: item.name
             },
         };
 
